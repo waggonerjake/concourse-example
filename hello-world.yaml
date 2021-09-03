@@ -1,7 +1,7 @@
 resources:
   - name: repo
     type: git
-    webhook_token: 'concours'
+    webhook_token: 'concourse'
     check_every: never
     source:
       uri: https://github.com/waggonerjake/concourse-example
