@@ -1,6 +1,8 @@
 resources:
   - name: repo
     type: git
+    webhook_token: 'concourse'
+    check_ever: never
     source:
       uri: https://github.com/waggonerjake/concourse-example
 
@@ -8,7 +10,7 @@ jobs:
   - name: hello-world-job
     plan:
       - get: repo
-        trigger: true #Trigger this job when a new version of this resource is available
+        trigger: true #Trigger this job when a new version of this resource is available (e.g. when a push happens)
       - task: hello-world-task
         config:
           platform: linux
@@ -16,6 +18,8 @@ jobs:
             type: registry-image
             source:
               repository: busybox
+          inputs:
+            - name: repo #since we run a get step earlier, we can retrieve the cloned repo here.
           run:
-            path: echo
-            args: ['Hello World!']
+            path: cat
+            args: ['repo/docker-compose.yml']
