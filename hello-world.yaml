@@ -1,0 +1,35 @@
+jobs:
+  - name: hello-world-job
+    plan:
+      - task: hello-world-task
+        config:
+          platform: linux #can only run linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: busybox #pull from dockerhub by default
+          outputs:
+            - name: the-artifact
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                ls -l
+                echo "hello from another step!" > the-artifact/message
+      - task: read-the-artifact
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: busybox
+          inputs:
+            - name: the-artifact
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                ls -l
+                cat the-artifact/message
